@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Password Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Rubik+Mono+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <style>
+        .heading {
+            font-family: 'Rubik Mono One', sans-serif;
+        }
+
+        * {
+            font-family: 'Josefin Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .search form {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 1s;
+            width: 50px;
+            height: 50px;
+            background: white;
+            box-sizing: border-box;
+            border-radius: 25px;
+            border: 4px solid white;
+            padding: 5px;
+        }
+
+        .search input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;;
+            height: 42.5px;
+            line-height: 30px;
+            outline: 0;
+            border: 0;
+            display: none;
+            font-size: 1em;
+            border-radius: 20px;
+            padding: 0 20px;
+        }
+
+        .fa {
+            box-sizing: border-box;
+            padding: 10px;
+            width: 42.5px;
+            height: 42.5px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 50%;
+            color: #07051a;
+            text-align: center;
+            font-size: 1.2em;
+            transition: all 1s;
+        }
+
+        .search form:hover {
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .search form:hover input {
+            display: block;
+        }
+
+        .search form:hover .fa {
+            background: #07051a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container p-md-5 p-lg-5 p-xl-5 p-sm-3 p-3">
+    <nav class="navbar navbar-expand-md bg-secondary navbar-dark fixed-top">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{{ url_for('home') }}">PasswordManager</a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse justify-content-center" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#passwords">Passwords</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#add_new">Add</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#update">Update</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#delete">Delete</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#password_generator">Password Generator</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav justify-content-end search">
+                <li>
+                    <form action="{{ url_for('search', page_no=records_info['page_no']) }}">
+                        <input type="search" name="keywords">
+                        <button type="submit" class="border-0"><i class="fa fa-search"></i></button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock content %}
+</div>
+<div class="list-group m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3" id="add_new">
+    <h3 class="text-center heading m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3">Add Record</h3>
+    <a class="list-group-item list-group-item-action d-flex justify-content-center">
+        <form class="form-inline d-flex justify-content-center flex-column" action="{{ url_for('add_record') }}"
+              method="post">
+            <label class="mr-sm-2">Email/Username</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="email_username">
+            <label class="mr-sm-2">Website</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="website">
+            <label class="mr-sm-2">Password</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="password"><br>
+            <button type="submit" class="btn mb-2 bg-primary">Add
+            </button>
+        </form>
+    </a>
+</div>
+<div class="list-group m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3" id="update">
+    <h3 class="text-center heading m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3">Update Record</h3>
+    <a class="list-group-item list-group-item-action d-flex justify-content-center">
+        <form class="form-inline d-flex justify-content-center flex-column" action="{{ url_for('update_record') }}"
+              method="post">
+            <label class="mr-sm-2">Serial Number</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="sno">
+            <label class="mr-sm-2">Email/Username</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="email_username">
+            <label class="mr-sm-2">Website</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="website">
+            <label class="mr-sm-2">Password</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="password"><br>
+            <button type="submit" class="btn mb-2 bg-primary">Update
+            </button>
+        </form>
+    </a>
+</div>
+<div class="list-group m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3" id="delete">
+    <h3 class="text-center heading m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3">Delete Record</h3>
+    <a class="list-group-item list-group-item-action d-flex justify-content-center">
+        <form class="form-inline d-flex justify-content-center flex-column" action="{{ url_for('delete_record') }}"
+              method="post">
+            <label class="mr-sm-2">Serial Number</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="sno">
+            <button type="submit" class="btn mb-2 bg-primary">Delete
+            </button>
+        </form>
+    </a>
+</div>
+<div class="list-group m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3" id="password_generator">
+    <h3 class="text-center heading m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3">Password Generator</h3>
+    <a class="list-group-item list-group-item-action d-flex justify-content-center"
+       href="https://passwordsgenerator.net/" target="_blank">
+        Password Generator
+    </a>
+</div>
+</div>
+
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="passwords">
+    <h2 class="m-5 m-md-5 m-xl-5 m-lg-5 p-sm-3 m-3 text-center heading">Passwords</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>S.no</th>
+                <th>ID</th>
+                <th>Email/Username</th>
+                <th>Website</th>
+                <th>Password</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for x in records_info['records'] %}
+            <tr>
+                <td onclick="copyToClipboard(this)">{{ loop.index }}</td>
+                <td onclick="copyToClipboard(this)">{{ x['_id'] }}</td>
+                <td onclick="copyToClipboard(this)">{{ x['email_username'] }}</td>
+                <td onclick="copyToClipboard(this)">{{ x['website'] }}</td>
+                <td onclick="copyToClipboard(this)">{{ x['password'] }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<ul class="pagination justify-content-center">
+    {% if records_info["previous_page"] == 0 %}
+    {% else %}
+    <li class="page-item"><a class="page-link"
+                             href="{{ url_for('home', page_no=records_info['previous_page']) }}">Previous</a>
+    </li>
+    {% endif %}
+    {% for page in range(1, (records_info["total_page"] + 1)) %}
+    {% if records_info["page_no"] == page %}
+    <li class="page-item"><a class="page-link bg-primary text-light" href="{{ url_for('home', page_no=page) }}">{{
+        page }}</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="{{ url_for('home', page_no=page) }}">{{ page }}</a></li>
+    {% endif %}
+    {% endfor %}
+    {% if records_info["page_no"] == records_info["total_page"] %}
+    {% else %}
+    <li class="page-item"><a class="page-link"
+                             href="{{ url_for('home', page_no=records_info['next_page']) }}">Next</a>
+    </li>
+    {% endif %}
+</ul>
+{% endblock content %}
